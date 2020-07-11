@@ -13,9 +13,8 @@ npm install --save @elastic/react-search-ui search-ui-azure-connector
 ```javascript
 import { AzureCognitiveSearchConnector } from "search-ui-azure-connector";
 
-// We'll connect to the Azure Cognitive Search public sandbox and send a
-// query to its "nycjobs" index built from a public dataset of available jobs
-// in New York.
+// We'll connect to the Azure Cognitive Search public sandbox and send a query
+//  to its "nycjobs" index built from a public dataset of available jobs in New York
 // https://www.npmjs.com/package/@azure/search-documents#send-your-first-search-query
 const connector = new AzureCognitiveSearchConnector({
   endpoint: "https://azs-playground.search.windows.net/",
@@ -36,13 +35,25 @@ const connector = new AzureCognitiveSearchConnector({
 
 ## Configuration
 
-All configuration for Search UI is provided in a single configuration object, as documented [here](https://github.com/elastic/search-ui/blob/master/ADVANCED.md#advanced-configuration). Specific Azure Cognitive Search configuration possibilities are documented below.
+All configuration for Search UI is provided in a single configuration object, as documented [here](https://github.com/elastic/search-ui/blob/master/ADVANCED.md#advanced-configuration).
 
-### Set suggester
-By default, the connector will use `sg` as the suggester name for autocomplete and suggestions.
+This connector supports the configuration possibilities of Search UI for filters, facets, autocomplete and suggestions. Specific Azure Cognitive Search configuration possibilities are documented below.
 
-If you specify `result_fields`, make sure they https://docs.microsoft.com/en-us/azure/search/index-add-suggesters
+### Choose suggester
 
-## Limitations
+By default, the connector will use `sg` as the suggester name for autocomplete and suggestions. If you want to specify a custom [suggester](https://docs.microsoft.com/en-us/azure/search/index-add-suggesters), you can add it to your `results` and `suggestions` config.
 
-- Facets
+```json
+{
+  "autocompleteQuery": {
+    "results": {
+      "suggester": "sg"
+    },
+    "suggestions": {
+      "suggester": "sg"
+    }
+  }
+}
+```
+
+If you specify fields in `result_fields`, make sure they exist in your suggester.
