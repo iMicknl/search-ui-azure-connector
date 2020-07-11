@@ -1,0 +1,29 @@
+{
+  "name": "search-ui-azure-connector",
+  "version": "0.1.0",
+  "description": "This Connector is used to connect Search UI to Azure Search API",
+  "main": "./lib/index.js",
+  "typings": "./lib/index.d.ts",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/iMicknl/search-ui-azure-connector.git"
+  },
+  "author": "Mick Vleeshouwer <mivleesh@microsoft.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/iMicknl/search-ui-azure-connector/issues"
+  },
+  "homepage": "https://github.com/iMicknl/search-ui-azure-connector#readme",
+  "dependencies": {
+    "@azure/search-documents": "^11.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^3.9.6"
+  }
+}
