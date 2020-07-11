@@ -61,3 +61,7 @@ By default, the connector uses `sg` as the suggester name for autocomplete and s
 TODO
 
 If you specify fields in `result_fields`, make sure they exist in your suggester.
+
+## Sample
+
+A sample using the more advanced features of Search UI can be found [here](./sample), built via [Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app). Checkout the live demo of [Search UI with Azure Cognitive Search](https://codesandbox.io/s/search-ui-nycjobs-d79oq).
