@@ -14,7 +14,7 @@ npm install --save @elastic/react-search-ui search-ui-azure-connector
 import { AzureCognitiveSearchConnector } from "search-ui-azure-connector";
 
 // We'll connect to the Azure Cognitive Search public sandbox and send a query
-//  to its "nycjobs" index built from a public dataset of available jobs in New York
+// to its "nycjobs" index built from a public dataset of available jobs in New York
 // https://www.npmjs.com/package/@azure/search-documents#send-your-first-search-query
 const connector = new AzureCognitiveSearchConnector({
   endpoint: "https://azs-playground.search.windows.net/",
@@ -39,9 +39,9 @@ All configuration for Search UI is provided in a single configuration object, as
 
 This connector supports the configuration possibilities of Search UI for filters, facets, autocomplete and suggestions. Specific Azure Cognitive Search configuration possibilities are documented below.
 
-### Choose suggester
+### Set custom suggester
 
-By default, the connector will use `sg` as the suggester name for autocomplete and suggestions. If you want to specify a custom [suggester](https://docs.microsoft.com/en-us/azure/search/index-add-suggesters), you can add it to your `results` and `suggestions` config.
+By default, the connector uses `sg` as the suggester name for autocomplete and suggestions. If you want to specify a custom [suggester](https://docs.microsoft.com/en-us/azure/search/index-add-suggesters) name, add the `suggester` property to the `results` and/or `suggestions` config.
 
 ```json
 {
@@ -55,5 +55,9 @@ By default, the connector will use `sg` as the suggester name for autocomplete a
   }
 }
 ```
+
+### Set Autocomplete Mode
+
+TODO
 
 If you specify fields in `result_fields`, make sure they exist in your suggester.

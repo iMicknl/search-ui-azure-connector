@@ -210,7 +210,6 @@ export class AzureCognitiveSearchConnector {
             console.error(error)
         }
 
-
         return {
             autocompletedResults: suggestionResults,
             autocompletedSuggestions: {
