@@ -1,7 +1,7 @@
 {
   "name": "search-ui-azure-connector",
   "version": "0.1.0",
-  "description": "This Connector is used to connect Search UI to Azure Search API",
+  "description": "This connector is used to connect Search UI to Azure Cognitive Search.",
   "main": "./lib/index.js",
   "typings": "./lib/index.d.ts",
   "directories": {
