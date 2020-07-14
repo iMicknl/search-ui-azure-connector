@@ -4,3 +4,4 @@
  */
 
 export * from './azureCognitiveSearchConnector'
+export * from './models'

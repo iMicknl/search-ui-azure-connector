@@ -1,3 +1,4 @@
+import { Result, RequestState, QueryConfig, ResponseState } from './models';
 import { SearchClient, SearchClientOptions, AzureKeyCredential, AutocompleteMode } from '@azure/search-documents'
 
 /**
@@ -8,63 +9,6 @@ export interface AzureCognitiveSearchConnectorSettings {
     queryKey: string;
     indexName: string;
     options?: SearchClientOptions
-}
-
-export interface Result {
-    query: string;
-    documentId: string;
-    tags: string[];
-}
-
-export enum Direction {
-    Asc = "asc",
-    Desc = "desc",
-}
-
-export interface RequestState {
-    /**
-     * Current page number
-     */
-    current?: number;
-    filters?: any[]; // TODO
-    /**
-     * Number of results to show on each page
-     */
-    resultsPerPage?: number;
-    /**
-     * Search terms to search for
-     */
-    searchTerm?: string;
-    /**
-     * Direction to sort
-     */
-    sortDirection?: any;
-    /**
-     * Name of field to sort on
-     */
-    sortField?: any;
-}
-
-export interface ResponseState {
-    autocompletedResults?: Result[];
-    autocompletedResultsRequestId?: string;
-    autocompletedSuggestions?: any;
-    autocompletedSuggestionsRequestId?: string;
-    facets?: any;
-    requestId?: string;
-    results?: Result[];
-    resultSearchTerm?: string;
-    totalResults?: number;
-    totalPages?: number; // Missing in https://github.com/elastic/search-ui/blob/master/ADVANCED.md#response-state
-}
-
-export interface QueryConfig {
-    facets?: any;
-    disjunctiveFacets?: string[];
-    disjunctiveFacetsAnalyticsTags?: string[];
-    conditionalFacets?: any;
-    search_fields?: any;
-    result_fields?: any;
 }
 
 /**
@@ -128,8 +72,9 @@ export class AzureCognitiveSearchConnector {
             }
         );
 
-        // Temp workaround
+        // TODO Rewrite using helper function or array.map()
         const results: any[] = []
+
         for await (const result of searchResults.results) {
             let document: any = result.document;
 
@@ -162,12 +107,12 @@ export class AzureCognitiveSearchConnector {
     public async onAutocomplete(state: RequestState, queryConfig: any): Promise<ResponseState> {
 
         const searchText = (state.searchTerm ? state.searchTerm : '')
-        const suggesterName = (queryConfig?.results?.suggester ? queryConfig.results.suggester : 'sg')
 
         // Autocomplete Results
         const resultsPerPage = queryConfig?.results?.resultsPerPage;
         const resultFields = Object.keys(queryConfig?.results?.result_fields);
         const autocompleteMode: AutocompleteMode = queryConfig?.results?.autocompleteMode;
+        const autocompleteSuggesterName = (queryConfig?.results?.suggester ? queryConfig.results.suggester : 'sg')
 
         const autoCompleteSettings = {
             ...(autocompleteMode && { autocompleteMode: autocompleteMode }),
@@ -178,23 +123,25 @@ export class AzureCognitiveSearchConnector {
         let autoCompleteResult: any[] = [];
 
         try {
-            const autocomplete = await this.client.autocomplete(searchText, suggesterName, autoCompleteSettings);
+            const autocomplete = await this.client.autocomplete(searchText, autocompleteSuggesterName, autoCompleteSettings);
             autoCompleteResult = (autocomplete.results).map(({ queryPlusText: suggestion }) => ({ suggestion }));
         } catch (error) {
             console.error(error)
         }
 
-        
-        // TODO Use size param
-        // TODO Use seperate suggester name
+
+        // TODO Implement size parameter
+        // TODO Implement multiple types
 
         // Document suggestions
+        const suggestionSuggesterName = (queryConfig?.suggestions?.suggester ? queryConfig.suggestions.suggester : 'sg')
+        const suggestionFields = '';
         const suggestionResults: any[] = []
 
         try {
-            const suggest = await this.client.suggest(searchText, suggesterName)
+            const suggest = await this.client.suggest(searchText, suggestionSuggesterName)
 
-            // Temp workaround
+            // TODO Rewrite using helper function or array.map()
             for await (const result of suggest.results) {
                 let document: any = result.document;
                 document["text"] = result.text;
@@ -215,7 +162,7 @@ export class AzureCognitiveSearchConnector {
         return {
             autocompletedResults: suggestionResults,
             autocompletedSuggestions: {
-                [`${searchText}_${suggesterName}`]: autoCompleteResult
+                [`${searchText}_${suggestionSuggesterName}`]: autoCompleteResult
             }
         }
 
