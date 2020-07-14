@@ -1,5 +1,5 @@
 import { Result, RequestState, QueryConfig, ResponseState } from './models';
-import { SearchClient, SearchClientOptions, AzureKeyCredential, AutocompleteMode } from '@azure/search-documents'
+import { SearchClient, SearchClientOptions, AzureKeyCredential, AutocompleteMode, odata } from '@azure/search-documents'
 
 /**
  * Settings used to configure a `AzureCognitiveSearchConnector` instance.
@@ -60,25 +60,23 @@ export class AzureCognitiveSearchConnector {
      */
     public async onSearch(state: RequestState, queryConfig: QueryConfig): Promise<ResponseState> {
 
-        let searchFacets: string[] = [];
+        // TODO Support full Facet syntax Rooms/BaseRate,interval:100"
 
-        if (queryConfig.facets) {
-            searchFacets = Object.keys(queryConfig.facets);
-        }
+        let searchFilters = '';
 
-        // TODO Retrieve facets
-        if (state.filters) {
+        if (state.filters && state.filters.length > 0) {
             for (const facet of state.filters) {
+                const name = facet.field;
+                const values = facet.values;
 
-                const activeFilters = []
-
-                if (searchFacets.includes(facet.field)) {
-                    
+                // TODO Create a way to parse filters to odata notation
+                if (values.length === 1) {
+                    searchFilters += `${name} eq "${values[0]}"`
                 }
-        
             }
         }
 
+        console.log(state.filters)
 
         const searchResults = await this.client.search(
             state.searchTerm,
@@ -90,6 +88,7 @@ export class AzureCognitiveSearchConnector {
                 ...(queryConfig.result_fields && { select: Object.keys(queryConfig.result_fields) }), // Select
                 ...(state.current && state.resultsPerPage && { skip: (state.current - 1) * state.resultsPerPage }), // Skip
                 ...(queryConfig.facets && { facets: Object.keys(queryConfig.facets) }), // Facets
+                ...(searchFilters && { filter: odata`${searchFilters}` }), // Filter
             }
         );
 
@@ -169,6 +168,7 @@ export class AzureCognitiveSearchConnector {
 
         let autoCompleteResult: any[] = [];
 
+        // TODO Remove try catch in favor for built-in ErrorBoundary
         try {
             const autocomplete = await this.client.autocomplete(searchText, autocompleteSuggesterName, autoCompleteSettings);
             autoCompleteResult = (autocomplete.results).map(({ queryPlusText: suggestion }) => ({ suggestion }));
