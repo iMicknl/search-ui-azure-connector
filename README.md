@@ -1,6 +1,6 @@
 # search-ui-azure-connector
 
-This connector is used to connect [Search UI](https://github.com/elastic/search-ui) to [Azure Cognitive Search](https://azure.microsoft.com/en-us/services/search/).
+This connector is used to connect [Search UI](https://github.com/elastic/search-ui) to [Azure Cognitive Search](https://azure.microsoft.com/en-us/services/search/). Checkout the live demo of [Search UI with Azure Cognitive Search](https://azurecognitivesearchui.z19.web.core.windows.net), or have a look at the [React sample](#sample).
 
 ## Getting started
 
@@ -82,4 +82,4 @@ This connector does not support all the functionality offered by [Search UI](htt
 
 ## Sample
 
-A sample using the more advanced features of Search UI can be found [here](./sample), built via [Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app). Checkout the live demo of [Search UI with Azure Cognitive Search](https://codesandbox.io/s/search-ui-nycjobs-d79oq).
+A sample using the more advanced features of Search UI can be found [here](./sample), built via [Create React App](https://reactjs.org/docs/create-a-new-react-app.html#create-react-app). Checkout the live demo of [Search UI with Azure Cognitive Search](https://azurecognitivesearchui.z19.web.core.windows.net) or have a look at the [code sandbox](https://codesandbox.io/s/search-ui-nycjobs-d79oq).
