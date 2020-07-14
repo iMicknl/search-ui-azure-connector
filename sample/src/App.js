@@ -1,9 +1,7 @@
 import React from 'react';
 import { ErrorBoundary, SearchProvider, Results, SearchBox, ResultsPerPage, Paging, PagingInfo, Sorting, Facet } from "@elastic/react-search-ui";
 import {
-  BooleanFacet,
   Layout,
-  SingleSelectFacet,
   SingleLinksFacet
 } from "@elastic/react-search-ui-views";
 
@@ -33,6 +31,11 @@ export default function App() {
               business_title: {},
               preferred_skills: {},
               job_description: {}
+            },
+            // disjunctiveFacets: ["salary_frequency"],
+            facets: {
+              business_title: {},
+              posting_type: {}
             }
           },
           autocompleteQuery: {
@@ -102,36 +105,20 @@ export default function App() {
                 ]} />
 
                 <Facet
-                  field="states"
-                  label="States"
+                  field="business_title"
+                  label="Business Title"
                   filterType="any"
                   isFilterable={true}
                 />
+
                 <Facet
-                  field="world_heritage_site"
-                  label="World Heritage Site?"
-                  view={BooleanFacet}
-                />
-                <Facet
-                  field="visitors"
-                  label="Visitors"
+                  field="posting_type"
+                  label="Posting Type"
+                  filterType="any"
+                  isFilterable={true}
                   view={SingleLinksFacet}
                 />
-                <Facet
-                  field="date_established"
-                  label="Date Established"
-                  filterType="any"
-                />
-                <Facet
-                  field="location"
-                  label="Distance"
-                  filterType="any"
-                />
-                <Facet
-                  field="acres"
-                  label="Acres"
-                  view={SingleSelectFacet}
-                />
+
               </div>
             }
           />

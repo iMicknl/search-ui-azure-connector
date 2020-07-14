@@ -60,6 +60,26 @@ export class AzureCognitiveSearchConnector {
      */
     public async onSearch(state: RequestState, queryConfig: QueryConfig): Promise<ResponseState> {
 
+        let searchFacets: string[] = [];
+
+        if (queryConfig.facets) {
+            searchFacets = Object.keys(queryConfig.facets);
+        }
+
+        // TODO Retrieve facets
+        if (state.filters) {
+            for (const facet of state.filters) {
+
+                const activeFilters = []
+
+                if (searchFacets.includes(facet.field)) {
+                    
+                }
+        
+            }
+        }
+
+
         const searchResults = await this.client.search(
             state.searchTerm,
             {
@@ -68,7 +88,8 @@ export class AzureCognitiveSearchConnector {
                 ...(state.sortField && state.sortDirection && { orderBy: [`${state.sortField} ${state.sortDirection}`] }),
                 ...(queryConfig.search_fields && { searchFields: Object.keys(queryConfig.search_fields) }), // SearchFields
                 ...(queryConfig.result_fields && { select: Object.keys(queryConfig.result_fields) }), // Select
-                ...(state.current && state.resultsPerPage && { skip: (state.current - 1) * state.resultsPerPage }) // Skip
+                ...(state.current && state.resultsPerPage && { skip: (state.current - 1) * state.resultsPerPage }), // Skip
+                ...(queryConfig.facets && { facets: Object.keys(queryConfig.facets) }), // Facets
             }
         );
 
@@ -88,6 +109,31 @@ export class AzureCognitiveSearchConnector {
             results.push(document)
         }
 
+        const facets: any = {};
+
+        // TODO Rewrite using helper function or array.map()
+        if (searchResults.facets) {
+
+            for (const facet in searchResults.facets) {
+                const values = searchResults.facets[facet];
+
+                facets[facet] = [{
+                    type: "value",
+                    data: []
+                }];
+
+                for (const value of values) {
+                    facets[facet][0].data.push(
+                        {
+                            "value": (value as any).value,
+                            "count": (value as any).count
+                        }
+                    )
+                }
+            }
+
+        }
+
         const totalResults = searchResults.count ? searchResults.count : 0
         const totalPages = state.resultsPerPage ? Math.ceil(totalResults / state.resultsPerPage) : 0
 
@@ -95,7 +141,8 @@ export class AzureCognitiveSearchConnector {
             results: results,
             totalPages,
             totalResults,
-            requestId: ""
+            requestId: "",
+            facets
         }
     }
 
