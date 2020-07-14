@@ -78,6 +78,7 @@ This connector does not support all the functionality offered by [Search UI](htt
 
 - Facet search
 - autocompleteQuery does not take results per page into account
+- Search UI doesn't offer a 'detail page' currently, just the search overview
 
 ## Sample
 
