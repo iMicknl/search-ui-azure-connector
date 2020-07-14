@@ -60,7 +60,7 @@ By default, the connector uses `sg` as the suggester name for autocomplete and s
 
 The Autocomplete API supports [three different modes](https://docs.microsoft.com/en-us/rest/api/searchservice/autocomplete#autocomplete-modes). The default mode is `oneTerm`. You can add the `autocompleteMode` property to the `results` config, to change the Autocomplete Mode.
 
-```json
+```javascript
 {
   "autocompleteQuery": {
     "results": {
