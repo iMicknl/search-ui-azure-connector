@@ -58,9 +58,26 @@ By default, the connector uses `sg` as the suggester name for autocomplete and s
 
 ### Set Autocomplete Mode
 
-TODO
+The Autocomplete API supports [three different modes](https://docs.microsoft.com/en-us/rest/api/searchservice/autocomplete#autocomplete-modes). The default mode is `oneTerm`. You can add the `autocompleteMode` property to the `results` config, to change the Autocomplete Mode.
+
+```json
+{
+  "autocompleteQuery": {
+    "results": {
+      "autocompleteMode": "twoTerms" // oneTerm, twoTerms or oneTermWithContext
+    }
+  }
+}
+```
 
 If you specify fields in `result_fields`, make sure they exist in your suggester.
+
+## Limitations
+
+This connector does not support all the functionality offered by [Search UI](https://github.com/elastic/search-ui). The following features are not (yet) supported.
+
+- Facet search
+- autocompleteQuery does not take results per page into account
 
 ## Sample
 

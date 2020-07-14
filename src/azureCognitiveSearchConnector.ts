@@ -165,13 +165,12 @@ export class AzureCognitiveSearchConnector {
         const suggesterName = (queryConfig?.results?.suggester ? queryConfig.results.suggester : 'sg')
 
         // Autocomplete Results
-        const resultsPerPage = queryConfig.results.resultsPerPage;
+        const resultsPerPage = queryConfig?.results?.resultsPerPage;
         const resultFields = Object.keys(queryConfig?.results?.result_fields);
-
-        // Possible values include: 'oneTerm', 'twoTerms', 'oneTermWithContext'
+        const autocompleteMode: AutocompleteMode = queryConfig?.results?.autocompleteMode;
 
         const autoCompleteSettings = {
-            autocompleteMode: 'twoTerms' as AutocompleteMode,
+            ...(autocompleteMode && { autocompleteMode: autocompleteMode }),
             ...(resultsPerPage && { top: resultsPerPage }),
             ...(resultFields && { searchFields: resultFields })
         }
@@ -185,6 +184,9 @@ export class AzureCognitiveSearchConnector {
             console.error(error)
         }
 
+        
+        // TODO Use size param
+        // TODO Use seperate suggester name
 
         // Document suggestions
         const suggestionResults: any[] = []
