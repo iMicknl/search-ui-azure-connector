@@ -71,12 +71,16 @@ export class AzureCognitiveSearchConnector {
 
                 // TODO Create a way to parse filters to odata notation
                 if (values.length === 1) {
-                    searchFilters += `${name} eq "${values[0]}"`
+                    if (searchFilters !== '') {
+                        searchFilters += ` and `
+                    }
+                    searchFilters += `${name} eq '${values[0]}'`
                 }
             }
         }
 
-        console.log(state.filters)
+        console.log(state.filters);
+        console.log(searchFilters);
 
         const searchResults = await this.client.search(
             state.searchTerm,
@@ -88,7 +92,7 @@ export class AzureCognitiveSearchConnector {
                 ...(queryConfig.result_fields && { select: Object.keys(queryConfig.result_fields) }), // Select
                 ...(state.current && state.resultsPerPage && { skip: (state.current - 1) * state.resultsPerPage }), // Skip
                 ...(queryConfig.facets && { facets: Object.keys(queryConfig.facets) }), // Facets
-                ...(searchFilters && { filter: odata`${searchFilters}` }), // Filter
+                ...(searchFilters && { filter: `${searchFilters}` }), // Filter
             }
         );
 
